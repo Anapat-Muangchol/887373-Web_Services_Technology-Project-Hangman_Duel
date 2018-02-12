@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>game</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="mystyleGame.css"/>
+    <script type="text/javascript" script-name="bangers" src="http://use.edgefonts.net/bangers.js"></script>
+</head>
+<body>
+<script>
+    window.onload = function () {
+
+        var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+            'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+            't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+        var categories;         // Array of topics
+        var chosenCategory;     // Selected catagory
+        var getHint;          // Word getHint
+        var word;              // Selected word
+        var guess;             // Geuss
+        var geusses = [];      // Stored geusses
+        var lives;             // Lives
+        var counter;           // Count correct geusses
+        var space;              // Number of spaces in word '-'
+        var score;              // Scores
+        var con;                // Count Continue (2)
+        var coin;
+        // Get elements
+        var showLives = document.getElementById("mylives");
+        var showCatagory = document.getElementById("scatagory");
+        var showScore = document.getElementById("myScore");
+        var showScoreEnd = document.getElementById("myScoreEnd");
+        var showScoreEnd1 = document.getElementById("myScoreEnd1");
+        var showContinueCoin = document.getElementById("continue1");
+        
+        var reset = $('#reset');
+        var end = $('#end');
+        var end1 = $('#end1');
+        var showContinue = $('#continue');
+        var a = $('#buttons');
+        reset.hide();
+        end.hide();
+        end1.hide();
+        //continue.show();
+        // create alphabet ul
+        var buttons = function () {
+            myButtons = document.getElementById('buttons');
+            letters = document.createElement('ul');
+
+            for (var i = 0; i < alphabet.length; i++) {
+                letters.id = 'alphabet';
+                list = document.createElement('li');
+                list.id = 'letter';
+                list.innerHTML = alphabet[i];
+                check();
+                myButtons.appendChild(letters);
+                letters.appendChild(list);
+            }
+        }
+
+
+        // Select Catagory
+        var selectCat = function () {
+            if (chosenCategory === categories[0]) {
+                catagoryName.innerHTML = "Category Is Football Teams";
+            } else if (chosenCategory === categories[1]) {
+                catagoryName.innerHTML = "Category Is Films";
+            } else if (chosenCategory === categories[2]) {
+                catagoryName.innerHTML = "Category Is Cities";
+            }
+        }
+
+        // Create geusses ul
+        result = function () {
+            wordHolder = document.getElementById('hold');
+            correct = document.createElement('ul');
+
+            for (var i = 0; i < word.length; i++) {
+                correct.setAttribute('id', 'my-word');
+                guess = document.createElement('li');
+                guess.setAttribute('class', 'guess');
+                if (word[i] === "-") {
+                    guess.innerHTML = "-";
+                    space = 1;
+                } else {
+                    guess.innerHTML = "_";
+                }
+
+                geusses.push(guess);
+                wordHolder.appendChild(correct);
+                correct.appendChild(guess);
+            }
+        }
+
+        // Show lives
+        comments = function () {
+            showLives.innerHTML = "You have " + lives + " lives";
+            showScore.innerHTML = "You Score " + score;
+            if (lives < 1) {
+                if (con >= 1) {
+                    showScoreEnd.innerHTML = "You Score " + score;
+                    end.show();
+                    showContinue.hide();
+                    showContinueCoin.innerHTML = (coin);
+                } else {
+                    end1.show();
+                    showScoreEnd1.innerHTML = "You Score " + score;
+                    drawArray[0]();
+                    showLives.innerHTML = "Game Over";
+                    showContinue.hide();
+                }
+            }
+            for (var i = 0; i < geusses.length; i++) {
+                if (counter + space === geusses.length) {
+                    showLives.innerHTML = "You Win!";
+                    //letters.parentNode.removeChild(letters);
+                    a.hide();
+                    reset.show();
+                   
+                }
+            }
+        }
+
+        // Animate man
+        var animate = function () {
+            var drawMe = lives;
+            drawArray[drawMe]();
+        }
+
+
+        // Hangman
+        canvas = function () {
+
+            myStickman = document.getElementById("stickman");
+            context = myStickman.getContext('2d');
+            context.beginPath();
+            context.strokeStyle = "#fff";
+            context.lineWidth = 2;
+        };
+
+        head = function () {
+            myStickman = document.getElementById("stickman");
+            context = myStickman.getContext('2d');
+            context.beginPath();
+            context.arc(60, 25, 10, 0, Math.PI * 2, true);
+            context.stroke();
+        }
+
+        draw = function ($pathFromx, $pathFromy, $pathTox, $pathToy) {
+
+            context.moveTo($pathFromx, $pathFromy);
+            context.lineTo($pathTox, $pathToy);
+            context.stroke();
+        }
+
+        frame1 = function () {
+            draw(0, 150, 150, 150);
+        };
+
+        frame2 = function () {
+            draw(10, 0, 10, 600);
+        };
+
+        frame3 = function () {
+            draw(0, 5, 70, 5);
+        };
+
+        frame4 = function () {
+            draw(60, 5, 60, 15);
+        };
+
+        torso = function () {
+            draw(60, 36, 60, 70);
+        };
+
+        rightArm = function () {
+            draw(60, 46, 100, 50);
+        };
+
+        leftArm = function () {
+            draw(60, 46, 20, 50);
+        };
+
+        rightLeg = function () {
+            draw(60, 70, 100, 100);
+        };
+
+        leftLeg = function () {
+            draw(60, 70, 20, 100);
+        };
+
+        drawArray = [rightLeg, leftLeg, rightArm, leftArm, torso, head, frame4, frame3, frame2, frame1];
+
+
+        // OnClick Function
+        check = function () {
+            list.onclick = function () {
+                var geuss = (this.innerHTML);
+                this.setAttribute("class", "active");
+                this.onclick = null;
+                for (var i = 0; i < word.length; i++) {
+                    if (word[i] === geuss) {
+                        geusses[i].innerHTML = geuss;
+                        counter += 1;
+                        score += 10;
+                    }
+                }
+                var j = (word.indexOf(geuss));
+                if (j === -1) {
+                    lives -= 1;
+                    comments();
+                    animate();
+                } else {
+                    comments();
+                }
+            }
+        }
+
+
+        // Play
+        play = function () {
+            categories = [
+                ["everton", "liverpool", "swansea", "chelsea", "hull", "manchester-city", "newcastle-united"],
+                ["alien", "dirty-harry", "gladiator", "finding-nemo", "jaws"],
+                ["manchester", "milan", "madrid", "amsterdam", "prague"]
+            ];
+
+            chosenCategory = categories[Math.floor(Math.random() * categories.length)];
+            word = chosenCategory[Math.floor(Math.random() * chosenCategory.length)];
+            word = word.replace(/\s/g, "-");
+            console.log(word);
+            buttons();
+            geusses = [];
+            lives = 6
+            score = 0
+            counter = 0
+            space = 0;
+            con = 2;
+            coin = 200;
+            result();
+            comments();
+            selectCat();
+            canvas();
+            drawArray[9]();
+            drawArray[8]();
+            drawArray[7]();
+            drawArray[6]();
+        }
+
+        play();
+        //next
+        next = function () {
+            categories = [
+                ["everton", "liverpool", "swansea", "chelsea", "hull", "manchester-city", "newcastle-united"],
+                ["alien", "dirty-harry", "gladiator", "finding-nemo", "jaws"],
+                ["manchester", "milan", "madrid", "amsterdam", "prague"]
+            ];
+
+            chosenCategory = categories[Math.floor(Math.random() * categories.length)];
+            word = chosenCategory[Math.floor(Math.random() * chosenCategory.length)];
+            word = word.replace(/\s/g, "-");
+            console.log(word);
+            buttons();
+            geusses = [];
+            lives = 6 - ( 6 - lives);
+            score = 0 + score;
+            counter = 0;
+            space = 0;
+            result();
+            comments();
+            selectCat();
+            canvas();
+            a.show();
+        }
+
+        // Reset
+        document.getElementById('reset').onclick = function () {
+            correct.parentNode.removeChild(correct);
+            letters.parentNode.removeChild(letters);
+        
+            next();
+            reset.hide();
+        }
+
+        document.getElementById('continue1').onclick = function () {
+            context.clearRect(60, 70, 45, 50);
+            end.hide();
+            showContinueCoin.innerHTML = (coin);
+            showContinue.show();
+            lives = lives + 1;
+            con = con - 1;
+            coin = coin + 200;
+            comments();
+        }
+        document.getElementById('cancel').onclick = function () {
+            end.hide();
+            end1.show();
+            showScoreEnd1.innerHTML = "You Score " + score;
+        }
+    }
+</script>
+<div class="container-fluid">
+    <div class="row">
+        <h1>Hangman Duel</h1>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-6">
+            <p id="mylives"></p>
+            <p id="myScore"></p>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p id="catagoryName">
+        </div>
+    </div>
+    <div row style="margin-top: 25px;">
+        <div class="col-md-6">
+            <div class="wrapper">
+                <canvas id="stickman" style="  width: 100%; height: auto;"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6" style="margin-top: 90px;">
+            <div class="wrapper" id="continue">
+                <div id="hold"></div>
+                <br><br>
+                <div id="buttons"></div>
+                <button id="reset">next</button>
+            </div>
+        </div>
+    </div>
+    <div class="a" id="end">
+        <p>Game over</p>
+        <p id="myScoreEnd"></p>
+
+        <button id="continue1"></button>
+        <button id="cancel">cancel</button>
+
+    </div>
+    <div class="a" id="end1">
+        <p>Game over</p>
+        <p id="myScoreEnd1"></p>
+
+        <button>Share</button>
+        <button>cancel</button>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Hangman Duel | Test FB API</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:url"
+          content="http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/test_hangman.html"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Your Website Title"/>
+    <meta property="og:description" content="Your description"/>
+    <meta property="og:image"
+          content="http://angsila.cs.buu.ac.th/~57160033/887240%20System%20Analysis%20and%20Designs/Lab01/lab01.png"/>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+<div id="fb-root"></div>
+<h2>Share</h2>
+<div id="shareLevelUpBtn" class="btn btn-success clearfix">Level Up</div>
+<div id="shareRankUpBtn" class="btn btn-success clearfix">Ranking Up</div>
+<div id="sharePlaySingleBtn" class="btn btn-success clearfix">Play Single Mode</div>
+<div id="sharePlayDuelBtn" class="btn btn-success clearfix">Play Duel Mode</div>
+<div id="shareWinDuelBtn" class="btn btn-success clearfix">Win Duel Mode</div>
+<div id="shareLoseDuelBtn" class="btn btn-success clearfix">Lose Duel Mode</div>
+</body>
+
+<script>
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '1664574940517586',
+            xfbml: true,
+            version: 'v2.8'
+        });
+        FB.AppEvents.logPageView();
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    //=================== Share Level Up =====================
+    document.getElementById('shareLevelUpBtn').onclick = function () {
+        FB.ui({
+                    method: 'share',
+                    href: 'http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/',
+                    picture: "http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/img/share-levelup.png",
+                    title: "Hangman Duel - Congratulations!! Level Up.",
+                    description: "ขอแสดงความยินดี คุณเลื่อนสู่เลเวล 10 แล้ว",
+                    caption: "อยากสนุกด้วยกัน ก็เข้ามาเล่นสิ!!",
+                },
+                // callback
+                function (response) {
+                    if (response && !response.error_message) {
+                        alert('Posting completed.');
+                    } else {
+                        alert('Error while posting.');
+                    }
+                }
+        );
+    }
+
+    //=================== Share Ranking Up =====================
+    document.getElementById('shareRankUpBtn').onclick = function () {
+        FB.ui({
+                    method: 'share',
+                    href: 'http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/',
+                    picture: "http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/img/share-rankup.png",
+                    title: "Hangman Duel - Congratulations!! Ranking Up.",
+                    description: "ขอแสดงความยินดี คุณเลื่อนขั้นสู่ระดับ Diamond แล้ว",
+                    caption: "อยากสนุกด้วยกัน ก็เข้ามาเล่นสิ!!",
+                },
+                // callback
+                function (response) {
+                    if (response && !response.error_message) {
+                        alert('Posting completed.');
+                    } else {
+                        alert('Error while posting.');
+                    }
+                }
+        );
+    }
+
+    //=================== Share Play Single Mode =====================
+    document.getElementById('sharePlaySingleBtn').onclick = function () {
+        FB.ui({
+                    method: 'share',
+                    href: 'http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/',
+                    picture: "http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/img/share-playsingle.png",
+                    title: "Hangman Duel - Play Single Mode (140 Score).",
+                    description: "คุณทำคะแนนในโหมดเล่นคนเดียวได้ 140 คะแนน",
+                    caption: "อยากสนุกด้วยกัน ก็เข้ามาเล่นสิ!!",
+                },
+                // callback
+                function (response) {
+                    if (response && !response.error_message) {
+                        alert('Posting completed.');
+                    } else {
+                        alert('Error while posting.');
+                    }
+                }
+        );
+    }
+
+    //=================== Share Play Duel Mode =====================
+    document.getElementById('sharePlayDuelBtn').onclick = function () {
+        FB.ui({
+                    method: 'share',
+                    href: 'http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/',
+                    picture: "http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/img/share-playduel.png",
+                    title: "Hangman Duel - Play Duel Mode (210 Score).",
+                    description: "คุณแข่งขันกับ Note แล้วทำคะแนนได้ 210 คะแนน",
+                    caption: "อยากสนุกด้วยกัน ก็เข้ามาเล่นสิ!!",
+                },
+                // callback
+                function (response) {
+                    if (response && !response.error_message) {
+                        alert('Posting completed.');
+                    } else {
+                        alert('Error while posting.');
+                    }
+                }
+        );
+    }
+
+    //=================== Share Win Duel Mode =====================
+    document.getElementById('shareWinDuelBtn').onclick = function () {
+        FB.ui({
+                    method: 'share',
+                    href: 'http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/',
+                    picture: "http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/img/share-winduel.png",
+                    title: "Hangman Duel - Win!! Duel Mode (210 Score).",
+                    description: "คุณชนะ Note ในโหมดแข่งขัน โดยทำคะแนนได้ 210 คะแนน",
+                    caption: "อยากสนุกด้วยกัน ก็เข้ามาเล่นสิ!!",
+                },
+                // callback
+                function (response) {
+                    if (response && !response.error_message) {
+                        alert('Posting completed.');
+                    } else {
+                        alert('Error while posting.');
+                    }
+                }
+        );
+    }
+
+    //=================== Share Lose Duel Mode =====================
+    document.getElementById('shareLoseDuelBtn').onclick = function () {
+        FB.ui({
+                    method: 'share',
+                    href: 'http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/',
+                    picture: "http://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/img/share-loseduel.png",
+                    title: "Hangman Duel - Lose!! Duel Mode (180 Score).",
+                    description: "คุณแพ้ Thanaphat ในโหมดแข่งขัน โดยทำคะแนนได้เพียง 180 คะแนน",
+                    caption: "อยากสนุกด้วยกัน ก็เข้ามาเล่นสิ!!",
+                },
+                // callback
+                function (response) {
+                    if (response && !response.error_message) {
+                        alert('Posting completed.');
+                    } else {
+                        alert('Error while posting.');
+                    }
+                }
+        );
+    }
+</script>
+</html>

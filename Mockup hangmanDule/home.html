@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Hangman Duel</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="mystyle.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" script-name="bangers" src="http://use.edgefonts.net/bangers.js"></script>
+</head>
+
+<body background="pic\background.jpg">
+<div class="container-fluid">
+    <div class="row head">
+        <div class="col-md-5 boxUser">
+            <div class="col-md-3 boxPicUser" id="user.pic"></div>
+            <div class="col-md-8 boxNameUser">
+                <div class="font" id="user.name"></div>
+                <br/>
+                <h5 class="font" id="user.level">Leval 30</h5>
+            </div>
+        </div>
+        <div class="col-md-3 box boxCoin">
+            <div class="font">
+                <img src="pic\coin.png" alt="Mountain View" class="button-hover picCoin"/> 1000
+            </div>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <img src="pic\MailBox.png" alt="Mountain View" class="button-hover pictrue m"/>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <a href="#" onclick="invite()" id="invite">
+                <img src="pic\Invite.png" alt="Mountain View" class="button-hover pictrue m"/>
+            </a>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <a href="#" onclick="logout()" id="logout">
+                <img src="pic\logout.png" alt="Mountain View" class="button-hover pictrue m"/>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="pic\17.gif" alt="Mountain View" class="pictrue"/>
+            <div class="row ">
+                <div class="col-md-6 ">
+                    <center>
+                        <button class="play" style="margin-top: 25px;">Play</button>
+                    </center>
+                </div>
+                <div class="col-md-6  fontScore" style="margin-top: 20px; margin-bottom: 30px;">
+                    high score
+
+                    <br/>
+                    <div class="fontScore1" align="right"> 20,000</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 " style="margin-top: -85px;">
+            <img src="pic\Rank.png" alt="Mountain View" class="picRank"/>
+            <div class="fontRank">
+                <center>
+                    <div class="Rank col-sx-6">
+
+                        <center>
+                            Rank
+                        </center>
+                    </div>
+                </center>
+            </div>
+            <!--box rank-->
+            <div class="row boxRank scrollbar" id="friend">
+                <!--user rank1-->
+                <div class="row userRank">
+                    <div class="col-md-1 col-xs-3 boxGem ">
+                        <img src="pic\Diamond.png" alt="Mountain View" class="picGem"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <img src="pic\line.png" alt="Mountain View" class="line">
+                    </div>
+                    <div class="col-md-2 col-xs-6 boxGem ">
+                        <img src="pic\rank1.jpg" alt="Mountain View" class="picUser picUserRank"/>
+                    </div>
+                    <!--User name Rank-->
+                    <div class="col-md-4 col-xs-8 boxGem " style="margin-left: 20px;">
+                        <div class="font">
+                            Asuka Kirara
+                        </div>
+                        <br/>
+                        <h5 class="font margin">Score 30000</h5>
+                    </div>
+                    <!--END User name Rank-->
+                    <!--Duel-->
+                    <div class="col-md-3 col-xs-3  boxGem ">
+                        <img src="pic\duel.png" alt="Mountain View" style="margin-left: -30px;"/>
+                    </div>
+                    <!--END Duel-->
+                </div>
+                <!--END user rank1-->
+
+                <!--user rank2-->
+                <div class="row userRank">
+                    <div class="col-md-1 col-xs-3 boxGem ">
+                        <img src="pic\Emerald.png" alt="Mountain View" class="picGem"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <img src="pic\line.png" alt="Mountain View" class="line">
+                    </div>
+                    <div class="col-md-2 col-xs-6 boxGem ">
+                        <img src="pic\rank2.png" alt="Mountain View" class="picUser picUserRank"/>
+                    </div>
+                    <!--User name Rank-->
+                    <div class="col-md-4 col-xs-8 boxGem " style="margin-left: 20px;">
+                        <div class="font">
+                            Uzumaki Naruto
+                        </div>
+                        <br/>
+                        <h5 class="font margin">Score 30000</h5>
+                    </div>
+                    <!--END User name Rank-->
+                    <!--Duel-->
+                    <div class="col-md-3 col-xs-3  boxGem ">
+                        <img src="pic\duel.png" alt="Mountain View" style="margin-left: -30px;"/>
+                    </div>
+                    <!--END Duel-->
+                </div>
+                <!--END user rank2-->
+                <!--user rank3-->
+                <div class="row userRank">
+                    <div class="col-md-1 col-xs-3 boxGem ">
+                        <img src="pic\Ruby.png" alt="Mountain View" class="picGem"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <img src="pic\line.png" alt="Mountain View" class="line">
+                    </div>
+                    <div class="col-md-2 col-xs-6 boxGem ">
+                        <img src="pic\rank3.jpg" alt="Mountain View" class="picUser picUserRank"/>
+                    </div>
+                    <!--User name Rank-->
+                    <div class="col-md-4 col-xs-8 boxGem " style="margin-left: 20px;">
+                        <div class="font">
+                            Cup E
+                        </div>
+                        <br/>
+                        <h5 class="font margin">Score 30000</h5>
+                    </div>
+                    <!--END User name Rank-->
+                    <!--Duel-->
+                    <div class="col-md-3 col-xs-3  boxGem ">
+                        <img src="pic\duel.png" alt="Mountain View" style="margin-left: -30px;"/>
+                    </div>
+                    <!--END Duel-->
+                </div>
+                <!--END user rank3-->
+                <!--user rank4-->
+                <div class="row userRankMe">
+                    <div class="col-md-1 col-xs-3 boxGem ">
+                        <img src="pic\Platinum.png" alt="Mountain View" class="picGem"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <img src="pic\line.png" alt="Mountain View" class="line">
+                    </div>
+                    <div class="col-md-2 col-xs-6 boxGem ">
+                        <img src="pic\user.png" alt="Mountain View" class="picUser picUserRank"/>
+                    </div>
+                    <!--User name Rank-->
+                    <div class="col-md-4 col-xs-8 boxGem " style="margin-left: 20px;">
+                        <div class="font">
+                            Mikami Yua
+                        </div>
+                        <br/>
+                        <h5 class="font margin">Score 30000</h5>
+                    </div>
+                    <!--END User name Rank-->
+                    <!--Duel-->
+                    <div class="col-md-3 col-xs-3  boxGem ">
+                        <img src="pic\duel.png" alt="Mountain View" style="margin-left: -30px;"/>
+                    </div>
+                    <!--END Duel-->
+                </div>
+                <!--END user rank4-->
+                <!--user rank5-->
+                <div class="row userRank">
+                    <div class="col-md-1 col-xs-3 boxGem ">
+                        <img src="pic\Goal.png" alt="Mountain View" class="picGem"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <img src="pic\line.png" alt="Mountain View" class="line">
+                    </div>
+                    <div class="col-md-2 col-xs-6 boxGem ">
+                        <img src="pic\rank4.jpg" alt="Mountain View" class="picUser picUserRank"/>
+                    </div>
+                    <!--User name Rank-->
+                    <div class="col-md-4 col-xs-8 boxGem " style="margin-left: 20px;">
+                        <div class="font">
+                            Haruka Kasumi
+                        </div>
+                        <br/>
+                        <h5 class="font margin">Score 30000</h5>
+                    </div>
+                    <!--END User name Rank-->
+                    <!--Duel-->
+                    <div class="col-md-3 col-xs-3  boxGem ">
+                        <img src="pic\duel.png" alt="Mountain View" style="margin-left: -30px;"/>
+                    </div>
+                    <!--END Duel-->
+                </div>
+                <!--END user rank5-->
+                <!--user rank6-->
+                <div class="row userRank">
+                    <div class="col-md-1 col-xs-3 boxGem ">
+                        <img src="pic\Silver.png" alt="Mountain View" class="picGem"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <img src="pic\line.png" alt="Mountain View" class="line">
+                    </div>
+                    <div class="col-md-2 col-xs-6 boxGem ">
+                        <img src="pic\rank5.jpg" alt="Mountain View" class="picUser picUserRank"/>
+                    </div>
+                    <!--User name Rank-->
+                    <div class="col-md-4 col-xs-8 boxGem " style="margin-left: 20px;">
+                        <div class="font">
+                            Iori Kogawa
+                        </div>
+                        <br/>
+                        <h5 class="font margin">Score 30000</h5>
+                    </div>
+                    <!--END User name Rank-->
+                    <!--Duel-->
+                    <div class="col-md-3 col-xs-3  boxGem ">
+                        <img src="pic\duel.png" alt="Mountain View" style="margin-left: -30px;"/>
+                    </div>
+                    <!--END Duel-->
+                </div>
+                <!--END user rank6-->
+                <!--user rank7-->
+                <div class="row userRank">
+                    <div class="col-md-1 col-xs-3 boxGem ">
+                        <img src="pic\stone.png" alt="Mountain View" class="picGem"/>
+                    </div>
+                    <div class="col-md-1 col-xs-1">
+                        <img src="pic\line.png" alt="Mountain View" class="line">
+                    </div>
+                    <div class="col-md-2 col-xs-6 boxGem ">
+                        <img src="pic\rank6.jpg" alt="Mountain View" class="picUser picUserRank"/>
+                    </div>
+                    <!--User name Rank-->
+                    <div class="col-md-4 col-xs-8 boxGem " style="margin-left: 20px;">
+                        <div class="font">
+                            Suzu Mitake
+                        </div>
+                        <br/>
+                        <h5 class="font margin">Score 30000</h5>
+                    </div>
+                    <!--END User name Rank-->
+                    <!--Duel-->
+                    <div class="col-md-3 col-xs-3  boxGem ">
+                        <img src="pic\duel.png" alt="Mountain View" style="margin-left: -30px;"/>
+                    </div>
+                    <!--END Duel-->
+                </div>
+                <!--END user rank7-->
+            </div>
+            <!--END box rank-->
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '1664574940517586',
+            cookie: true,
+            xfbml: true,
+            version: 'v2.8'
+        });
+
+        FB.getLoginStatus(function (response) {
+            if (response.status === 'connected') {
+                //alert("connected");
+
+                //================ Get My Profile ================
+                var fb_id = null;
+                FB.api('/me?fields=picture.width(200).height(200),id,name', 'GET', function (response) {
+                    fb_id = response.id;
+                    document.getElementById('user.pic').innerHTML = "<img src='" + response.picture.data.url + "' class='picUser'/>";
+                    document.getElementById('user.name').innerHTML = response.name;
+                    //alert(fb_id+" : "+response.picture.data.url+" : "+response.name);
+                });
+
+                //================ Friend lists ================
+                FB.api("me/friends", function (response) {
+                    if (response && !response.error) {
+                        console.log('Got friends: ', response.data);
+                        //var friend = [];
+                        //alert(friend);
+                        $.each(response.data, function (index, friend) {
+                            var temp = [2, friend.id, friend.name, friend.picture.data.url];
+                            friend.push(temp);
+                            alert(friend);
+                            //alert(friend.name);
+                            //$("#friendslist").append("<li class='list-group-item'><img src='" + friend.picture.data.url + "' class='img-circle'> " + friend.name + "</li>");
+                        });
+                    } else {
+                        alert("Error!");
+                    }
+                });
+
+            }else {
+                window.location = "index.html";
+            }
+        });
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function logout() {
+        //alert("click logout");
+        FB.logout(function (response) {
+            alert("logout successfully.");
+            window.location = "index.html";
+        });
+    }
+
+    function invite() {
+        //alert("click logout");
+        FB.ui({method: 'apprequests',
+            message: 'YOUR_MESSAGE_HERE'
+        }, function(response){
+            console.log(response);
+        });
+    }
+</script>
+</html>

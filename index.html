@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Hangman Dule</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="pic/Logo-HangManDuel-for-web.png" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="mystyle.css"/>
+    <style type="text/css">
+        body {
+            background-image: url("https://angsila.cs.buu.ac.th/~57160177/887373%20Web%20Services%20Technology/img/background.jpg");
+            margin: 0 0 0 0px;
+        }
+
+        .pictrue {
+            width: 100%;
+            height: 100%;
+        }
+
+        .top1 {
+            margin-top: 10px;
+            top: 10px;
+        }
+    </style>
+</head>
+
+<body hidden>
+<div class="container" id="top1">
+    <div class="row" align="center">
+        <div class="col-md-6 col-xs-12">
+            <img src="https://angsila.cs.buu.ac.th/~57160177/887373%20Web%20Services%20Technology/img/HangMan.png"
+                 class="pictrue"/>
+            <img src="https://angsila.cs.buu.ac.th/~57160177/887373%20Web%20Services%20Technology/img/img-HangMan.png"
+                 class="pictrue"/>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <br><br>
+            <img src="https://angsila.cs.buu.ac.th/~57160177/887373%20Web%20Services%20Technology/img/Login-with.png"
+                 class="pictrue"/>
+            <a href="#" onclick="login()" id="login">
+                <img src="https://angsila.cs.buu.ac.th/~57160177/887373%20Web%20Services%20Technology/img/f-Facebook.png"
+                     class="button-hover pictrue"/>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    if (location.protocol != 'https:') {
+        location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+    }
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '1664574940517586',
+            cookie: true,
+            xfbml: true,
+            version: 'v2.8'
+        });
+
+        FB.getLoginStatus(function (response) {
+            if (response.status === 'connected') {
+                //alert("connected");
+                window.location = "home.html";
+            } else {
+                //alert(response.status);
+                document.getElementsByTagName('body')[0].removeAttribute("hidden");
+            }
+        });
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function login() {
+        //alert("click login");
+        FB.login(function (response) {
+            event.preventDefault();
+            if (response.status === 'connected') {
+                // Logged into your app and Facebook.
+                var fb_id = response.authResponse.userID;
+                //alert(fb_id);
+                $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users",
+                        {
+                            "fb_id": fb_id
+                        },
+                        function (data, status) {
+                            //alert("Data: " + data + "\nStatus: " + status);
+                            window.location = "home.html";
+                        });
+            } else {
+                // The person is not logged into this app or we are unable to tell.
+            }
+
+        }, {scope: 'public_profile,email,user_friends'});
+    }
+</script>
+</html>

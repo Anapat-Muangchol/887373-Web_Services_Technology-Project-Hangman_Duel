@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Play - Hangman Single</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="shortcut icon" type="image/x-icon" href="../pic/Logo-HangManDuel-for-web.png" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="mystyleGame.css"/>
+    <link rel="stylesheet" type="text/css" href="../mystyle.css"/>
+    <script type="text/javascript" script-name="bangers" src="https://use.edgefonts.net/bangers.js"></script>
+</head>
+<body hidden>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-xs-0"></div>
+        <div class="col-md-6 col-xs-8">
+            <h1>Hangman Single</h1>
+        </div>
+        <div class="col-md-3 col-xs-4" style="margin-top: 15px;">
+            <img src="..\pic\coin.png" style="width: 50px;"/> <span id="user.coin"></span> Coin.
+        </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-6">
+            <p id="mylives"></p>
+            <p id="myScore"></p>
+        </div>
+        <div class="col-md-6">
+            <p id="catagoryName">
+        </div>
+    </div>
+    <div row style="margin-top: 25px;">
+        <div class="col-md-6">
+            <div class="wrapper">
+                <canvas id="stickman" style="  width: 100%; height: auto;"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6" style="margin-top: 90px;">
+            <div class="wrapper" id="continue">
+                <div id="hold"></div>
+                <br>
+                <div id="translation" style="font-size: 25px;"></div>
+                <br>
+                <div id="buttons"></div>
+                <button id="reset">next</button>
+            </div>
+        </div>
+    </div>
+    <div class="a" id="end">
+        <p>Continue ?</p>
+        <p id="myScoreEnd"></p>
+
+        <button id="continue1" style="background-color: #00ff00;"></button>
+        <button id="cancel" style="background-color: #ffbb00;">Cancel</button>
+
+    </div>
+    <div class="a" id="end1">
+        <p>Game over</p>
+        <p id="myScoreEnd1"></p>
+
+        <button id="sharePlaySingleBtn" style="background-color: #3b5998;"><img src="../pic/FB_icon.png" style="margin-top: -2px; border-style: solid; border-width: 1px; border-radius: 5px; border-color: #FFFFFF;">&nbsp;Share</button>
+        <button style="background-color: #ffbb00;" onclick="location.href = 'https://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/';">Cancel</button>
+
+    </div>
+</div>
+</body>
+
+<script>
+    if (location.protocol != 'https:') {
+        location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+    }
+
+    window.onload = function () {
+
+        //================ Variable ================
+        var accessToken = null;
+        var NumberFormat = new Intl.NumberFormat();
+
+        var me_fb_id = null;
+        var me_status = null;
+        var me_coin = null;
+        var me_level = null;
+        var me_exp = null;
+        var me_single_high_score = null;
+
+        var coin;
+        var score;
+        var lives;
+
+        var end1 = $('#end1');
+        end1.hide();
+        var showScoreEnd1 = document.getElementById("myScoreEnd1");
+        var showLives = document.getElementById("mylives");
+
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1664574940517586',
+                cookie: true,
+                xfbml: true,
+                version: 'v2.8'
+            });
+
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    accessToken = response.authResponse.accessToken;
+                    //alert("connected");
+
+                    //================ Get My Profile ================
+                    FB.api('me?fields=id', 'GET', function (response) {
+                        me_fb_id = response.id;
+                        $.get("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/" + me_fb_id, function (data, status) {
+                            //alert("Data: " + data + "\nStatus: " + status);
+                            data = JSON.parse(data);
+
+                            me_status = data.users[0].status;
+                            if(me_status!=1){
+                                if(me_status==0){
+                                    window.location = "https://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/";
+                                }else if(me_status==2){
+                                    window.location = "https://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/game/duel.html";
+                                }
+                            }
+                            me_coin = data.users[0].coin;
+                            me_level = data.users[0].level;
+                            me_exp = data.users[0].exp;
+                            me_single_high_score = data.users[0].single_high_score;
+                            document.getElementById('user.coin').innerHTML = NumberFormat.format(me_coin);
+
+                            $.get("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-single.php/single/last/users/" + me_fb_id, function (data, status) {
+                                data = JSON.parse(data);
+                                if(data.single[0].status == 2){
+                                    window.location = "https://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/";
+                                }
+
+                                coin = data.single[0].reward;
+                                score = coin;
+                                lives = data.single[0].life_left;
+
+                                if(score!=0 || lives!=6){
+                                    // update status game
+                                    $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-single.php/single/last/users/" + me_fb_id +"/status",
+                                            {
+                                                "status": 2
+                                            },
+                                            function (data, status) {
+                                                // update status user
+                                                $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/status",
+                                                        {
+                                                            "status": 0
+                                                        },
+                                                        function (data, status) {
+                                                            end1.show();
+                                                            showScoreEnd1.innerHTML = "You Score " + score;
+                                                            showLives.innerHTML = "Game Over";
+                                                            document.getElementsByTagName('body')[0].removeAttribute("hidden");
+                                                        });
+                                            });
+                                }else{
+                                    play_game();
+                                }
+                            });
+                        });
+                    });
+
+                } else {
+                    window.location = "index.html";
+                }
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+
+
+        function play_game() {
+
+            var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+                'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+                'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+//            var categories;         // Array of topics
+//            var chosenCategory;     // Selected catagory
+//            var getHint;          // Word getHint
+            var word;              // word
+            var translation;       // Translation
+            var guess;             // Geuss
+            var geusses = [];      // Stored geusses
+            var counter;           // Count correct geusses
+            var space;              // Number of spaces in word '-'
+            var con;                // Count Continue (2)
+
+            // Get elements
+            var showLives = document.getElementById("mylives");
+            var showCatagory = document.getElementById("scatagory");
+            var showScore = document.getElementById("myScore");
+            var showScoreEnd = document.getElementById("myScoreEnd");
+            var showScoreEnd1 = document.getElementById("myScoreEnd1");
+            var showContinueCoin = document.getElementById("continue1");
+            var showTranslation = document.getElementById("translation");
+
+            var reset = $('#reset');
+            var end = $('#end');
+            var end1 = $('#end1');
+            var showContinue = $('#continue');
+            var a = $('#buttons');
+            var showTranslationJQ = $('#translation');
+            reset.hide();
+            end.hide();
+            //end1.hide();
+            //continue.show();
+            // create alphabet ul
+
+            // Random word
+            $.get("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-word.php/words/random", function (data, status) {
+                //alert("Data: " + data + "\nStatus: " + status);
+                data = JSON.parse(data);
+                catagoryName.innerHTML = "Category Is "+data.words[0].category_name;
+                word = data.words[0].word;
+                translation = data.words[0].translation;
+                play();
+            });
+
+            var buttons = function () {
+                myButtons = document.getElementById('buttons');
+                letters = document.createElement('ul');
+
+                for (var i = 0; i < alphabet.length; i++) {
+                    letters.id = 'alphabet';
+                    list = document.createElement('li');
+                    list.id = 'letter';
+                    list.innerHTML = alphabet[i];
+                    check();
+                    myButtons.appendChild(letters);
+                    letters.appendChild(list);
+                }
+            }
+
+
+//            // Select Catagory
+//            var selectCat = function () {
+//                if (chosenCategory === categories[0]) {
+//                    catagoryName.innerHTML = "Category Is Football Teams";
+//                } else if (chosenCategory === categories[1]) {
+//                    catagoryName.innerHTML = "Category Is Films";
+//                } else if (chosenCategory === categories[2]) {
+//                    catagoryName.innerHTML = "Category Is Cities";
+//                }
+//            }
+
+            // Create geusses ul
+            result = function () {
+                wordHolder = document.getElementById('hold');
+                correct = document.createElement('ul');
+
+                for (var i = 0; i < word.length; i++) {
+                    correct.setAttribute('id', 'my-word');
+                    guess = document.createElement('li');
+                    guess.setAttribute('class', 'guess');
+                    if (word[i] === "-") {
+                        guess.innerHTML = "-";
+                        space = 1;
+                    } else {
+                        guess.innerHTML = "_";
+                    }
+
+                    geusses.push(guess);
+                    wordHolder.appendChild(correct);
+                    correct.appendChild(guess);
+                }
+            }
+
+            // Show lives
+            comments = function () {
+                showLives.innerHTML = "You lives : " + lives + " <img src='../pic/heart.png' style='width: 25px;'/>";
+                showScore.innerHTML = "You Score " + score;
+                if (lives < 1) {
+                    if (con >= 1) {
+                        if(me_coin<coin){
+                            end_game()
+                        }else{
+                            showScoreEnd.innerHTML = "You Score " + score;
+                            end.show();
+                            showContinue.hide();
+                            showContinueCoin.innerHTML = "<img src='../pic/coin_icon.png'>&nbsp;"+(coin);
+                        }
+                    } else {
+                        end_game()
+                    }
+                }
+                for (var i = 0; i < geusses.length; i++) {
+                    if (counter + space === geusses.length) {
+                        showLives.innerHTML = "You Win!";
+                        showTranslation.innerHTML = translation;
+                        showTranslationJQ.show();
+                        //letters.parentNode.removeChild(letters);
+                        a.hide();
+                        reset.show();
+                    }
+                }
+            }
+
+            function end_game() {
+                // update status game
+                $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-single.php/single/last/users/" + me_fb_id +"/status",
+                        {
+                            "status": 2
+                        },
+                        function (data, status) {
+                            // update status user
+                            $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/status",
+                                    {
+                                        "status": 0
+                                    },
+                                    function (data, status) {
+                                        //alert("Data: " + data + "\nStatus: " + status);
+                                    });
+                        });
+
+                // update coin
+                me_coin = parseInt(score)+parseInt(me_coin);
+                document.getElementById('user.coin').innerHTML = NumberFormat.format(me_coin);
+                $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/coins",
+                        {
+                            "coins": me_coin
+                        },
+                        function (data, status) {
+                            //alert("Data: " + data + "\nStatus: " + status);
+                        });
+                // update exp and level
+                me_exp = parseInt(score)+parseInt(me_exp);
+                var max_exp = Math.pow(2, (parseInt(me_level) - 1)) * 100;
+                if(me_exp >= max_exp){
+                    me_level = parseInt(me_level) + 1;
+                    me_exp = me_exp - max_exp;
+                    $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/levels",
+                            {
+                                "levels": me_level
+                            },
+                            function (data, status) {
+                                //alert("Data: " + data + "\nStatus: " + status);
+                                $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/exp",
+                                        {
+                                            "exp": me_exp
+                                        },
+                                        function (data, status) {
+                                            //alert("Data: " + data + "\nStatus: " + status);
+                                            var coinBonus = (me_level-1) * 1000;
+                                            $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/coins",
+                                                    {
+                                                        "coins": (me_coin + coinBonus)
+                                                    },
+                                                    function (data, status) {
+                                                        //alert("Data: " + data + "\nStatus: " + status);
+                                                        alert("Congratulation!! You Level Up. \n( Your level "+me_level+" and Receive Bonus "+coinBonus+" Coins. )");
+                                                        FB.ui({
+                                                                method: 'share',
+                                                                href: 'https://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/',
+                                                                picture: "https://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/img/share-levelup.png",
+                                                                title: "Hangman Duel - Congratulations!! Your Levels "+me_level+".",
+                                                                description: "ขอแสดงความยินดี คุณเลื่อนสู่เลเวล "+me_level+" แล้ว",
+                                                                caption: "อยากสนุกด้วยกัน ก็เข้ามาเล่นสิ!!",
+                                                            },
+                                                            // callback
+                                                            function (response) {
+                                                                if (response && !response.error_message) {
+                                                                    //alert('Posting completed.');
+                                                                } else {
+                                                                    //alert('Error while posting.');
+                                                                }
+                                                            }
+                                                        );
+                                                    });
+                                        });
+                            });
+                }else{
+                    $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/exp",
+                            {
+                                "exp": me_exp
+                            },
+                            function (data, status) {
+                                //alert("Data: " + data + "\nStatus: " + status);
+                            });
+                }
+                // update single_high_score
+                if(score > me_single_high_score){
+                    // update highscores user
+                    $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/highscores",
+                            {
+                                "scores": score
+                            },
+                            function (data, status) {
+                                //alert("Data: " + data + "\nStatus: " + status);
+                            });
+                }
+                wordHolder.innerHTML = "<span style='font-size: 25px;'>"+word+"</span>";
+                showTranslation.innerHTML = translation;
+                showTranslationJQ.show();
+                end1.show();
+                showContinue.show();
+                a.hide();
+                showScoreEnd1.innerHTML = "You Score " + score;
+                drawArray[0]();
+                showLives.innerHTML = "Game Over";
+            }
+
+            // Animate man
+            var animate = function () {
+                var drawMe = lives;
+                drawArray[drawMe]();
+            }
+
+
+            // Hangman
+            canvas = function () {
+
+                myStickman = document.getElementById("stickman");
+                context = myStickman.getContext('2d');
+                context.beginPath();
+                context.strokeStyle = "#fff";
+                context.lineWidth = 2;
+            };
+
+            head = function () {
+                myStickman = document.getElementById("stickman");
+                context = myStickman.getContext('2d');
+                context.beginPath();
+                context.arc(60, 25, 10, 0, Math.PI * 2, true);
+                context.stroke();
+            }
+
+            draw = function ($pathFromx, $pathFromy, $pathTox, $pathToy) {
+
+                context.moveTo($pathFromx, $pathFromy);
+                context.lineTo($pathTox, $pathToy);
+                context.stroke();
+            }
+
+            frame1 = function () {
+                draw(0, 150, 150, 150);
+            };
+
+            frame2 = function () {
+                draw(10, 0, 10, 600);
+            };
+
+            frame3 = function () {
+                draw(0, 5, 70, 5);
+            };
+
+            frame4 = function () {
+                draw(60, 5, 60, 15);
+            };
+
+            torso = function () {
+                draw(60, 36, 60, 70);
+            };
+
+            rightArm = function () {
+                draw(60, 46, 100, 50);
+            };
+
+            leftArm = function () {
+                draw(60, 46, 20, 50);
+            };
+
+            rightLeg = function () {
+                draw(60, 70, 100, 100);
+            };
+
+            leftLeg = function () {
+                draw(60, 70, 20, 100);
+            };
+
+            drawArray = [rightLeg, leftLeg, rightArm, leftArm, torso, head, frame4, frame3, frame2, frame1];
+
+
+            // OnClick Function
+            check = function () {
+                list.onclick = function () {
+                    var geuss = (this.innerHTML);
+                    this.setAttribute("class", "active");
+                    this.onclick = null;
+                    for (var i = 0; i < word.length; i++) {
+                        if (word[i] === geuss) {
+                            geusses[i].innerHTML = geuss;
+                            counter += 1;
+                            score += 10;
+                            $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-single.php/single/last/users/"+me_fb_id+"/reward",
+                                    {
+                                        "reward": score
+                                    },
+                                    function (data, status) {
+                                        //alert("Data: " + data + "\nStatus: " + status);
+                                    });
+                        }
+                    }
+                    var j = (word.indexOf(geuss));
+                    if (j === -1) {
+                        lives -= 1;
+                        $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-single.php/single/last/users/"+me_fb_id+"/life",
+                                {
+                                    "life": lives
+                                },
+                                function (data, status) {
+                                    //alert("Data: " + data + "\nStatus: " + status);
+                                });
+                        comments();
+                        animate();
+                    } else {
+                        comments();
+                    }
+                }
+            }
+
+            // Play
+            play = function () {
+                word = word.replace(/\s/g, "-").toUpperCase();
+                //console.log(word);
+                buttons();
+                geusses = [];
+                lives = 6
+                score = 0
+                counter = 0
+                space = 0;
+                con = 2;
+                coin = 100;
+                result();
+                comments();
+                canvas();
+                drawArray[9]();
+                drawArray[8]();
+                drawArray[7]();
+                drawArray[6]();
+            }
+
+            //next
+            next = function () {
+                word = word.replace(/\s/g, "-").toUpperCase();
+                //console.log(word);
+                buttons();
+                geusses = [];
+                lives = 6 - ( 6 - lives);
+                score = 0 + score;
+                counter = 0;
+                space = 0;
+                result();
+                comments();
+                canvas();
+                a.show();
+            }
+
+            // Reset
+            document.getElementById('reset').onclick = function () {
+                correct.parentNode.removeChild(correct);
+                letters.parentNode.removeChild(letters);
+
+                $.get("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-word.php/words/random", function (data, status) {
+                    //alert("Data: " + data + "\nStatus: " + status);
+                    data = JSON.parse(data);
+                    catagoryName.innerHTML = "Category Is "+data.words[0].category_name;
+                    word = data.words[0].word;
+                    translation = data.words[0].translation;
+                    showTranslationJQ.hide();
+                    reset.hide();
+                    next();
+                });
+            }
+
+            document.getElementById('continue1').onclick = function () {
+                context.clearRect(60, 70, 45, 50);
+                end.hide();
+                showContinueCoin.innerHTML = "<img src='../pic/coin_icon.png'>&nbsp;"+(coin);
+                showContinue.show();
+                lives = lives + 1;
+                $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-single.php/single/last/users/"+me_fb_id+"/life",
+                        {
+                            "life": lives
+                        },
+                        function (data, status) {
+                            //alert("Data: " + data + "\nStatus: " + status);
+                        });
+                //con = con - 1;
+                //console.log("coin : "+coin);
+                me_coin = parseInt(me_coin) - parseInt(coin);
+                document.getElementById('user.coin').innerHTML = NumberFormat.format(me_coin);
+                $.post("https://angsila.cs.buu.ac.th/~57160608/887373/hangman/api/api-user.php/users/"+me_fb_id+"/coins",
+                        {
+                            "coins": me_coin
+                        },
+                        function (data, status) {
+                            //alert("Data: " + data + "\nStatus: " + status);
+                            //console.log("me_coin : "+me_coin);
+                        });
+                coin = coin * 2;
+                comments();
+            }
+            document.getElementById('cancel').onclick = function () {
+                con=0;
+                comments();
+                showScoreEnd1.innerHTML = "You Score " + score;
+            }
+
+            //=================== Share Play Single Mode =====================
+            document.getElementById('sharePlaySingleBtn').onclick = function () {
+                FB.ui({
+                            method: 'share',
+                            href: 'https://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/',
+                            picture: "https://angsila.cs.buu.ac.th/~57160033/887373%20Web%20Services/HangmanDuel/img/share-playsingle.png",
+                            title: "Hangman Duel - Play Single Mode ("+score+" Score).",
+                            description: "คุณทำคะแนนในโหมดเล่นคนเดียวได้ "+score+" คะแนน",
+                            caption: "อยากสนุกด้วยกัน ก็เข้ามาเล่นสิ!!",
+                        },
+                        // callback
+                        function (response) {
+                            if (response && !response.error_message) {
+                                //alert('Posting completed.');
+                            } else {
+                                //alert('Error while posting.');
+                            }
+                        }
+                );
+            }
+
+            document.getElementsByTagName('body')[0].removeAttribute("hidden");
+        }
+
+    }
+</script>
+
+</html>
